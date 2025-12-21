@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch Calendar - Stream Schedule Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z8EJ4M6W6Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-Z8EJ4M6W6Z');
+    </script>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo">
+                    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                    </svg>
+                    <span class="logo-text">Twitch Calendar</span>
+                </div>
+                <button class="connect-btn" id="connect-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span id="connect-btn-text">Connect Twitch</span>
+                </button>
+            </div>
+            <div class="header-controls">
+                <div class="date-nav">
+                    <button class="nav-btn" id="prev-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <span class="current-date" id="current-date">December 2024</span>
+                    <button class="nav-btn" id="next-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </button>
+                    <button class="today-btn" id="today-btn">Today</button>
+                </div>
+                <div class="view-selector">
+                    <button class="view-btn" data-view="day">Day</button>
+                    <button class="view-btn active" data-view="week">Week</button>
+                    <button class="view-btn" data-view="month">Month</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Streamers Panel (shown/hidden via tabs on mobile) -->
+            <aside class="sidebar" id="streamers-panel">
+                <div class="sidebar-header">
+                    <h2>Streamers</h2>
+                    <span class="following-count" id="following-count">0 following</span>
+                </div>
+                <div class="search-box">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="streamer-search" placeholder="Search Twitch streamers...">
+                    <div class="search-loading" id="search-loading">
+                        <div class="spinner"></div>
+                    </div>
+                    <div class="search-results" id="search-results">
+                        <!-- Populated by JS when searching -->
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-header">Following</div>
+                </div>
+                <div class="streamers-list" id="streamers-list">
+                    <!-- Populated by JS -->
+                </div>
+                
+                <!-- Support Button -->
+                <div class="sidebar-footer">
+                    <a href="https://ko-fi.com/shiftclick" target="_blank" rel="noopener" class="kofi-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                            <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311z"/>
+                        </svg>
+                        Buy me a coffee
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Calendar Area -->
+            <main class="calendar-container" id="calendar-panel">
+                <div class="calendar" id="calendar">
+                    <!-- Populated by JS -->
+                </div>
+            </main>
+        </div>
+        
+        <!-- Mobile Bottom Tab Navigation -->
+        <nav class="mobile-tabs" id="mobile-tabs">
+            <button class="mobile-tab active" data-panel="calendar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <span>Calendar</span>
+            </button>
+            <button class="mobile-tab" data-panel="streamers">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>Streamers</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Event Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="event-modal">
+            <button class="modal-close" id="modal-close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="modal-content" id="modal-content">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Connect Modal -->
+    <div class="modal-overlay" id="connect-modal-overlay">
+        <div class="modal connect-modal">
+            <button class="modal-close" id="connect-modal-close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="modal-content">
+                <div class="connect-header">
+                    <svg class="connect-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                        <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+                    </svg>
+                    <h2>Connect to Twitch</h2>
+                    <p>Enter your Twitch Developer credentials to enable live search</p>
+                </div>
+                <div class="connect-form">
+                    <div class="form-group">
+                        <label for="client-id">Client ID</label>
+                        <input type="text" id="client-id" placeholder="Your Twitch Client ID">
+                        <span class="form-hint">Get this from <a href="https://dev.twitch.tv/console/apps" target="_blank">dev.twitch.tv/console</a></span>
+                    </div>
+                    <div class="connect-status" id="connect-status"></div>
+                    <div class="connect-actions">
+                        <button class="modal-btn modal-btn-primary" id="authorize-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                                <polyline points="10 17 15 12 10 7"/>
+                                <line x1="15" y1="12" x2="3" y2="12"/>
+                            </svg>
+                            Authorize with Twitch
+                        </button>
+                    </div>
+                    <div class="connect-info">
+                        <h4>How to get your Client ID:</h4>
+                        <ol>
+                            <li>Go to <a href="https://dev.twitch.tv/console/apps" target="_blank">Twitch Developer Console</a></li>
+                            <li>Click "Register Your Application"</li>
+                            <li>Name: "Twitch Calendar" (or anything you like)</li>
+                            <li>OAuth Redirect URL: <code id="redirect-url">http://localhost:8080</code></li>
+                            <li>Category: Choose any</li>
+                            <li>Copy your Client ID here</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
